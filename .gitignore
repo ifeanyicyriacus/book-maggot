@@ -1,1 +1,4 @@
 .env
+/catalog/migrations
+/user/migrations
+db.sqlite3

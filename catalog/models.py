@@ -44,7 +44,7 @@ class Genre(models.Model):
     GENRE_CHOICES = (
         ("D", "DRAMA"),
         ("R", "ROMANCE"),
-        ("D", "COMEDY"),
+        ("C", "COMEDY"),
         ("F", "FINANCE"),
         ("P", "POLITICS"),
     )

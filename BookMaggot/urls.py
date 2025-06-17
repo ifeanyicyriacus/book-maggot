@@ -20,6 +20,7 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('catalog/', include('catalog.urls')),
+    path('user/', include('user.urls')),
 ]
 
 admin.site.site_header='Book Maggot Admin'

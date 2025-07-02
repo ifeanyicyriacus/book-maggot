@@ -1,6 +1,8 @@
 # from django.http import HttpResponse
 from django.shortcuts import render
-from .models import Book
+
+from user.serializers import AuthorSerializer
+from .models import Book, Author
 from .serializers import BookSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -14,5 +16,14 @@ def get_books(request):
     return Response(serializer.data, status=status.HTTP_200_OK)
     # return HttpResponse("Hello, world. You're at the books page.")
 
-def greet(request, name):
-    return render(request, template_name='index.html', context={'name':name})
+def add_author(request):
+    author = AuthorSerializer(data=request.data)
+    author.is_valid(raise_exception=True)
+    author.save()
+    return Response(author.data, status=status.HTTP_201_CREATED)
+
+@api_view()
+def get_authors(request):
+    authors = Author.objects.all()
+    serializer = AuthorSerializer(authors, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)

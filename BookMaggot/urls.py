@@ -15,12 +15,16 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.db import router
 from django.urls import path, include
+
+import catalog
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('catalog/', include('catalog.urls')),
-    path('user/', include('user.urls')),
+    # path('catalog/', include('catalog.urls')),
+    # path('user/', include('user.urls')),
+    path('books/', include('catalog.urls')),
 ]
 
 admin.site.site_header='Book Maggot Admin'

@@ -8,6 +8,12 @@ class BookAdmin(admin.ModelAdmin):
     search_fields = ['title']
     list_per_page = 10
 
+@admin.register(models.Author)
+class AuthorAdmin(admin.ModelAdmin):
+    list_display = ['first_name', 'last_name', 'email', 'dob', 'dod']
+    search_fields = ['first_name', 'last_name']
+    list_per_page = 10
+
 @admin.register(models.Genre)
 class GenreAdmin(admin.ModelAdmin):
     list_display = ['name']
@@ -20,7 +26,3 @@ class LanguageAdmin(admin.ModelAdmin):
 class BookInstanceAdmin(admin.ModelAdmin):
     list_display = ['id', 'book', 'status', 'return_date', 'comments', 'user']
     list_filter = ['return_date', 'status']
-# admin.site.register(models.Book)
-# admin.site.register(models.Genre)
-# admin.site.register(models.BookInstance)
-# admin.site.register(models.Language)

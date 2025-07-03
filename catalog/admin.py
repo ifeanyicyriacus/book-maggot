@@ -26,3 +26,8 @@ class LanguageAdmin(admin.ModelAdmin):
 class BookInstanceAdmin(admin.ModelAdmin):
     list_display = ['id', 'book', 'status', 'return_date', 'comments', 'user']
     list_filter = ['return_date', 'status']
+
+@admin.register(models.BookImage)
+class BookImageAdmin(admin.ModelAdmin):
+    list_display = ['book', 'image']
+    list_display_links = ['image']

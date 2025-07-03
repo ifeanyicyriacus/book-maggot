@@ -1,6 +1,6 @@
 from django.urls import path, include
 from . import views
-from rest_framework import routers
+from rest_framework_nested import routers
 
 from .views import BookImageViewSet
 
@@ -8,6 +8,9 @@ router = routers.DefaultRouter()
 # router = routers.SimpleRouter()
 router.register('books', views.BookViewSet, basename='books')
 router.register('images', BookImageViewSet, basename='book-images')
+
+book_image_router = routers.NestedDefaultRouter(router, 'books', lookup='book')
+book_image_router.register('images', BookImageViewSet, basename='book-images')
 
 print(router.urls)
 
@@ -22,6 +25,7 @@ urlpatterns = [
     # path('delete/authors/<int:pk>/', views.delete_author, name="delete_author"),
 
     path('', include(router.urls)),
+    path('', include(book_image_router.urls)),
 
     path('authors/', views.AddAuthorView.as_view(), name='add_author'),
 

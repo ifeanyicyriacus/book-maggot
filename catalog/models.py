@@ -69,5 +69,7 @@ class Language(models.Model):
 
 class BookImage(models.Model):
     image = models.ImageField(upload_to="book/images/", null=True, blank=True)
-    book = models.ForeignKey('Book', on_delete=models.CASCADE)
+    book = models.ForeignKey('Book', on_delete=models.CASCADE, related_name='images')
 
+    def __str__(self):
+        return self.image.name

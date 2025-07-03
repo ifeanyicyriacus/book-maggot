@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 import os
+from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -36,6 +37,8 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'catalog',
     'user',
+    'djoser',
+    'drf_yasg',
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -139,3 +142,26 @@ AUTH_USER_MODEL = 'user.User'
 
 MEDIA_ROOT = os.path.join(BASE_DIR / 'media')
 MEDIA_URL = '/media/'
+
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'rest_framework.permissions.IsAuthenticated'
+#     ]
+# }
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+DJOSER = {
+    'SERIALIZERS':{
+        'user_create': 'user.serializers.UserCreateSerializer',
+    }
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+}

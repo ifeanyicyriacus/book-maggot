@@ -2,10 +2,10 @@
 from django.core.serializers import serialize
 from django.shortcuts import render
 from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, get_object_or_404
+from rest_framework.permissions import IsAuthenticated
 
-from user.serializers import AuthorSerializer
 from .models import Book, Author, BookImage
-from .serializers import BookSerializer, AddBookSerializer, BookImageSerializer
+from .serializers import BookSerializer, AddBookSerializer, BookImageSerializer, AuthorSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status, viewsets
@@ -78,3 +78,9 @@ def image_detail(request, pk):
 class BookImageViewSet(viewsets.ModelViewSet):
     queryset = BookImage.objects.all()
     serializer_class = BookImageSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_serializer_context(self):
+        return {
+            "book_id": self.kwargs.get('book_pk')
+        }

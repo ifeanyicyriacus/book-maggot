@@ -1,9 +1,13 @@
 # from django.http import HttpResponse
+import smtplib
+
+from django.core.mail import send_mail
 from django.core.serializers import serialize
 from django.shortcuts import render
 from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 
+from django.conf import settings
 from .models import Book, Author, BookImage, BookInstance
 from .serializers import BookSerializer, AddBookSerializer, BookImageSerializer, AuthorSerializer, \
     BookInstanceSerializer
@@ -105,6 +109,18 @@ def borrow_book(request, pk):
         comments=data.validated_data['comments'],
         return_date=data.validated_data['return_date']
     )
-    return Response(
-        {"message": "book borrowed successfully"},
-        status=status.HTTP_200_OK)
+
+    subject = "Notification from Book Maggot"
+    message = f"Your request to borrow book {book.title} is successful, you can pick up from the registered mailing address"
+    from_email = settings.DEFAULT_FROM_EMAIL
+    recipient_list = [user.email]
+    try:
+        send_mail(
+            subject=subject,
+            message=message,
+            from_email=from_email,
+            recipient_list=recipient_list
+        )
+    except smtplib.SMTPAuthenticationError as e:
+        return Response({'message': f'{e}'}, status=status.HTTP_406_NOT_ACCEPTABLE)
+    return Response({"message": "book borrowed successfully"}, status=status.HTTP_200_OK)

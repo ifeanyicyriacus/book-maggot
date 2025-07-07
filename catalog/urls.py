@@ -32,6 +32,7 @@ urlpatterns = [
     path('authors/<int:pk>/', views.GetUpdateDeleteAuthorView.as_view(), name='get_update_and_delete'),
 
     path("images/<int:pk>/", views.image_detail, name="book-images-detail"),
+    path("borrow-book/<int:pk>/", views.borrow_book, name="borrow_book"),
 
 ]
 

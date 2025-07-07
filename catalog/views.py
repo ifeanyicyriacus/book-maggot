@@ -4,10 +4,11 @@ from django.shortcuts import render
 from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 
-from .models import Book, Author, BookImage
-from .serializers import BookSerializer, AddBookSerializer, BookImageSerializer, AuthorSerializer
+from .models import Book, Author, BookImage, BookInstance
+from .serializers import BookSerializer, AddBookSerializer, BookImageSerializer, AuthorSerializer, \
+    BookInstanceSerializer
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status, viewsets
 
 
@@ -78,9 +79,32 @@ def image_detail(request, pk):
 class BookImageViewSet(viewsets.ModelViewSet):
     queryset = BookImage.objects.all()
     serializer_class = BookImageSerializer
-    permission_classes = [IsAuthenticated]
 
-    def get_serializer_context(self):
-        return {
-            "book_id": self.kwargs.get('book_pk')
-        }
+    # permission_classes = [IsAuthenticated]
+    # def get_serializer_context(self):
+    #     return {
+    #         "book_id": self.kwargs.get('book_pk')
+    #     }
+
+    def perform_create(self, serializer):
+        book_id = self.kwargs.get('book_pk')
+        if not book_id:
+            raise ValueError("book_id missing in kwargs!")
+        serializer.save(book_id=book_id)
+
+@permission_classes([IsAuthenticated])
+@api_view(['POST'])
+def borrow_book(request, pk):
+    book = get_object_or_404(Book, pk =pk)
+    user = request.user
+    data = BookInstanceSerializer(data=request.data)
+    data.is_valid(raise_exception=True)
+    book_instance = BookInstance()
+    book_instance.user = user
+    book_instance.book = book
+    book_instance.return_date = data.validated_data['return_date']
+    book_instance.comments = data.validated_data['comments']
+    book_instance.save()
+    return Response(
+        {"message": "book borrowed successfully"},
+        status=status.HTTP_200_OK)

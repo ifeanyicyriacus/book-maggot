@@ -99,12 +99,12 @@ def borrow_book(request, pk):
     user = request.user
     data = BookInstanceSerializer(data=request.data)
     data.is_valid(raise_exception=True)
-    book_instance = BookInstance()
-    book_instance.user = user
-    book_instance.book = book
-    book_instance.return_date = data.validated_data['return_date']
-    book_instance.comments = data.validated_data['comments']
-    book_instance.save()
+    BookInstance.objects.create(
+        user=user,
+        book=book,
+        comments=data.validated_data['comments'],
+        return_date=data.validated_data['return_date']
+    )
     return Response(
         {"message": "book borrowed successfully"},
         status=status.HTTP_200_OK)

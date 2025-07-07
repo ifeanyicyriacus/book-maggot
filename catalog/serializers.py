@@ -39,4 +39,6 @@ class BookImageSerializer(serializers.ModelSerializer):
 class BookInstanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = BookInstance
-        fields = ['id', 'book', 'status', 'return_date', 'comments']
+        fields = ['return_date', 'comments']
+
+
